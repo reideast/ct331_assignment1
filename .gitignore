@@ -1,4 +1,9 @@
 bin/*
 !bin/.gitkeep
 *.dSYM/
+
+#intellij metadata
 .idea
+
+#msword temp files
+~*.docx

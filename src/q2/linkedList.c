@@ -59,3 +59,32 @@ void deleteAfter(listElement* after){
   free(delete->data);
   free(delete);
 }
+
+//Determine how many elements are in a list, assuming the element passes as an argument is the head of that list
+int length(listElement* list) {
+    if (list == NULL) {
+        return 0;
+    } else {
+        return 1 + length(list->next);
+    }
+}
+
+//Push a new element onto the head of a list
+void push(listElement** list, char* data, size_t size) {
+    
+}
+
+//Pop an element from the head of a list
+listElement* pop(listElement** list) {
+    return NULL;
+}
+
+//Enqueue a new element onto the head of the list
+void enqueue(listElement** list, char* data, size_t size) {
+
+}
+
+//Dequeue an element from the tail of the list, and return that element
+listElement* dequeue(listElement* list) {
+    return NULL;
+}

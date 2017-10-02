@@ -6,7 +6,7 @@ void runTests(){
   printf("Tests running...\n");
   printf("Test create\n");
   listElement* l = createEl("Test String (1).", 30);
-//  printf("%s\n%p\n", l->data, l->next);
+  printf("%s\n%p\n", l->data, l->next);
   //Test create and traverse
   printf("Test traverse one item\n");
   traverse(l);
@@ -37,6 +37,15 @@ void runTests(){
   traverse(l);
   printf("Test length of list=%d\n", length(l));
   printf("\n");
+
+  //Test popping off the head
+  printf("Test pop, new list:\n");
+  listElement* node = pop(&l);
+  traverse(l);
+  printf("Test length of list=%d\n", length(l));
+  printf("Popped data='%s'\n", node->data);
+  printf("\n");
+
 
   printf("\nTests complete.\n");
 }

@@ -3,12 +3,6 @@
 #include <string.h>
 #include "linkedList.h"
 
-typedef struct listElementStruct{
-  char* data;
-  size_t size;
-  struct listElementStruct* next;
-} listElement;
-
 //Creates a new linked list element with given content of size
 //Returns a pointer to the element
 listElement* createEl(char* data, size_t size){
@@ -73,7 +67,7 @@ int length(listElement* list) {
 void push(listElement** list, char* data, size_t size) {
     // NOTE: list is a pointer to a pointer, so:
     //       **list is the actual node (head of list)
-    //       *list is a memory address, the pointer to that head of the list, and modifying this changes what the calling function believes is the node acting as the list's head
+    //       *list is a memory address (the pointer to that head of list) and modifying this changes what the calling function believes is the node acting as the list's head
     listElement* newHead = createEl(data, size);
     newHead->next = *list;
     *list = newHead;
@@ -81,7 +75,10 @@ void push(listElement** list, char* data, size_t size) {
 
 //Pop an element from the head of a list
 listElement* pop(listElement** list) {
-    return NULL;
+    listElement* oldHead = *list;
+    *list = oldHead->next; // reassign the list's head pointer
+    oldHead->next = NULL; // Design decision: since the whole node is being returned from this function rather than just data, to proactively prevent errors, the node is un-coupled from the list
+    return oldHead;
 }
 
 //Enqueue a new element onto the head of the list

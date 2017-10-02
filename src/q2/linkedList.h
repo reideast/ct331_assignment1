@@ -1,7 +1,13 @@
 #ifndef CT331_ASSIGNMENT_LINKED_LIST
 #define CT331_ASSIGNMENT_LINKED_LIST
 
-typedef struct listElementStruct listElement;
+typedef struct listElementStruct{
+  char* data;
+  size_t size;
+  struct listElementStruct* next;
+} listElement;
+// Note: The full definition of this struct was moved here so that all files that use nodes, such as test.c, can read its contents. This prevents the "dereferencing pointer to incomplete type" comelier msg
+//typedef struct listElementStruct listElement;
 
 //Creates a new linked list element with given content of size
 //Returns a pointer to the element

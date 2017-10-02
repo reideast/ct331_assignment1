@@ -83,7 +83,7 @@ listElement* pop(listElement** list) {
 
 //Enqueue a new element onto the head of the list
 void enqueue(listElement** list, char* data, size_t size) {
-
+    push(list, data, size);
 }
 
 //Dequeue an element from the tail of the list, and return that element

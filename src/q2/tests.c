@@ -46,6 +46,13 @@ void runTests(){
   printf("Popped data='%s'\n", node->data);
   printf("\n");
 
+  //Test enqueuing
+  printf("Test enqueue\n");
+  push(&l, "a new initial string (-1)", 30);
+  push(&l, "an even more initial string (-2)", 30);
+  traverse(l);
+  printf("Test length of list=%d\n", length(l));
+  printf("\n");
 
   printf("\nTests complete.\n");
 }

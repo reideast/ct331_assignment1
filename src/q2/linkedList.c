@@ -71,7 +71,12 @@ int length(listElement* list) {
 
 //Push a new element onto the head of a list
 void push(listElement** list, char* data, size_t size) {
-    
+    // NOTE: list is a pointer to a pointer, so:
+    //       **list is the actual node (head of list)
+    //       *list is a memory address, the pointer to that head of the list, and modifying this changes what the calling function believes is the node acting as the list's head
+    listElement* newHead = createEl(data, size);
+    newHead->next = *list;
+    *list = newHead;
 }
 
 //Pop an element from the head of a list

@@ -7,3 +7,4 @@ bin/*
 
 #msword temp files
 ~*.docx
+~*.tmp

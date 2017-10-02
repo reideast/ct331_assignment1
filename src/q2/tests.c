@@ -29,6 +29,14 @@ void runTests(){
   printf("Test length of list=%d\n", length(l));
   printf("Test length of partial list=%d\n", length(l3));
   printf("Test length of empty list=%d\n", length(NULL));
+  printf("\n");
+
+  //Test pushing to the head of the list
+  printf("Test push\n");
+  push(&l, "an initial string (0)", 30);
+  traverse(l);
+  printf("Test length of list=%d\n", length(l));
+  printf("\n");
 
   printf("\nTests complete.\n");
 }

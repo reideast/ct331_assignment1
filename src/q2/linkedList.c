@@ -68,13 +68,24 @@ void push(listElement** list, char* data, size_t size) {
     // NOTE: list is a pointer to a pointer, so:
     //       **list is the actual node (head of list)
     //       *list is a memory address (the pointer to that head of list) and modifying this changes what the calling function believes is the node acting as the list's head
+
+    // Guard against if the list pointer itself is empty, which is a usage error for this function
+    if (list == NULL) {
+        return;
+    }
+
+    // Create the new element
     listElement* newHead = createEl(data, size);
+
+    // Insert it at the head of the list
     newHead->next = *list;
     *list = newHead;
 }
 
 //Pop an element from the head of a list
 listElement* pop(listElement** list) {
+    // TODO: what if this is the last item in the list?
+    // TODO: what if *list is NULL? or **list is NULL?
     listElement* oldHead = *list;
     *list = oldHead->next; // reassign the list's head pointer
     oldHead->next = NULL; // Design decision: since the whole node is being returned from this function rather than just data, to proactively prevent errors, the node is un-coupled from the list
@@ -87,6 +98,33 @@ void enqueue(listElement** list, char* data, size_t size) {
 }
 
 //Dequeue an element from the tail of the list, and return that element
-listElement* dequeue(listElement* list) {
-    return NULL;
+listElement* dequeue(listElement** list) {
+    // Design decision: If I knew that this code was going to be primarily a Queue with many dequeue ops, I would change the internal design to be a doubly-linked list with a stored tail pointer
+    //                  But, I did not want to add that overhead and complexity w/o a good reason
+
+    // Guard against an already empty list or an error if the list pointer itself is empty
+    if (list == NULL || *list == NULL) {
+        return NULL;
+    }
+
+    // Find tail of list iteratively:
+    listElement* tail = *list;
+    // as well as the element before it:
+    listElement* newTail = NULL;
+    while (tail->next != NULL) {
+        newTail = tail;
+        tail = tail->next;
+    }
+
+    // Detect if there was only one item in the list, or there are more left
+    if (newTail == NULL) {
+        // Reassign the list's head pointer to reflect a newly emptied list
+        *list = NULL;
+    } else {
+        // Remove tail from the list
+        newTail->next = NULL;
+    }
+
+    // Return the removed node
+    return tail;
 }

@@ -54,5 +54,25 @@ void runTests(){
   printf("Test length of list=%d\n", length(l));
   printf("\n");
 
+  //Test dequeue
+  printf("Test dequeue\n");
+  node = dequeue(&l);
+  traverse(l);
+  printf("Test length of list=%d\n", length(l));
+  printf("Dequeued data='%s'\n", node->data);
+  printf("Dequeue all items\n");
+  node = dequeue(&l);
+  node = dequeue(&l);
+  node = dequeue(&l);
+  traverse(l);
+  printf("Test length of list=%d\n", length(l));
+  printf("Dequeued data='%s'\n", node->data);
+  printf("Dequeue an empty list\n");
+  node = dequeue(&l);
+  printf("Is the dequeued node null? %s\n", (node == NULL) ? "NULL" : "SOMETHING");
+  printf("Is the list head pointer null? %s\n", (l == NULL) ? "NULL" : "SOMETHING");
+  printf("\n");
+
+
   printf("\nTests complete.\n");
 }

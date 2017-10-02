@@ -36,6 +36,8 @@ listElement* pop(listElement** list);
 void enqueue(listElement** list, char* data, size_t size);
 
 //Dequeue an element from the tail of the list, and return that element
-listElement* dequeue(listElement* list);
+// Note: The assignment asked for the signature of this function to call for a listElement pointer, not a pointer to a listElement pointer
+//       I have made the design decision to change this functionality. This allows the function to handle the edge case of the list having a single element, and then that element is removed, leaving the list empty.
+listElement* dequeue(listElement** list);
 
 #endif

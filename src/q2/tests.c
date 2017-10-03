@@ -38,8 +38,8 @@ void runTests(){
   printf("Test length of list=%d\n", length(l));
   printf("\n");
 
-  //Test popping off the head
-  printf("Test pop, new list:\n");
+  //Test popping
+  printf("Test pop:\n");
   listElement* node = pop(&l);
   traverse(l);
   printf("Test length of list=%d\n", length(l));

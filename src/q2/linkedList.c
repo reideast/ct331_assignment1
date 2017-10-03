@@ -84,10 +84,12 @@ void push(listElement** list, char* data, size_t size) {
 
 //Pop an element from the head of a list
 listElement* pop(listElement** list) {
-    // TODO: what if this is the last item in the list?
-    // TODO: what if *list is NULL? or **list is NULL?
+    // Guard against an already empty list or an error if the list pointer itself is empty
+    if (list == NULL || *list == NULL) {
+        return NULL;
+    }
     listElement* oldHead = *list;
-    *list = oldHead->next; // reassign the list's head pointer
+    *list = oldHead->next; // reassign the list's head pointer. This will also work to empty the list if the item was previously the tail of the list
     oldHead->next = NULL; // Design decision: since the whole node is being returned from this function rather than just data, to proactively prevent errors, the node is un-coupled from the list
     return oldHead;
 }

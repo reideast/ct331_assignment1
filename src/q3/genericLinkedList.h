@@ -43,4 +43,7 @@ void enqueue(listElement** list, void* data, size_t size, void (*printer)(void*)
 //       I have made the design decision to change this functionality. This allows the function to handle the edge case of the list having a single element, and then that element is removed, leaving the list empty.
 listElement* dequeue(listElement** list);
 
+//Provide a safe way to free nodes that were returned from functions such as pop and dequeue
+void freeListElement(listElement* delete);
+
 #endif

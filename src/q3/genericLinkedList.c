@@ -37,6 +37,7 @@ void traverse(listElement* start){
         current->printDataFunction(current->data);
         current = current->next;
     }
+    printf("EOL\n");
 }
 
 //Inserts a new element after the given el
@@ -97,6 +98,7 @@ listElement* pop(listElement** list) {
     listElement* oldHead = *list;
     *list = oldHead->next; // reassign the list's head pointer. This will also work to empty the list if the item was previously the tail of the list
     oldHead->next = NULL; // Design decision: since the whole node is being returned from this function rather than just data, to proactively prevent errors, the node is un-coupled from the list
+
     return oldHead;
 }
 
@@ -135,4 +137,10 @@ listElement* dequeue(listElement** list) {
 
     // Return the removed node
     return tail;
+}
+
+void freeListElement(listElement* delete) {
+    //need to free the memory because we used malloc
+    free(delete->data);
+    free(delete);
 }

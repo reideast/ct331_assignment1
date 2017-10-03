@@ -1,80 +1,127 @@
 #include <stdio.h>
 #include "genericLinkedList.h"
+#include <math.h>
 
+// Define item printers
 void printString(void* data) {
-    printf("%s\n", (char*) data);
+    printf("%s -> ", (char*) data);
+}
+void printChar(void* data) {
+    printf("%c -> ", *((char*) data));
+}
+void printInt(void* data) {
+    printf("%d -> ", *((int*) data));
+}
+void printDouble(void* data) {
+    printf("%lf -> ", *((double*) data));
+}
+
+// Define an array that can be passed around as a (void*) and supports generics for its data elements. (But just printing, no real usefulness here...)
+typedef struct struct_structuredArray {
+    void** array;
+    int length;
+    void (*printDataFunction)(void* data);
+} structuredArray;
+void printStructuredArray(void* data) {
+    int len = ((structuredArray*) data)->length;
+    void** array = ((structuredArray*) data)->array;
+    for (int i = 0; i < len; ++i) {
+        void* item = (array + i);
+        ((structuredArray*) data)->printDataFunction(item);
+    }
+    printf(" -> ");
+}
+void printIntArrayItem(void* data) {
+    printf("%d, ", *((int*) data));
 }
 
 void runTests(){
     printf("Tests running...\n");
-    printf("Test create\n");
-    listElement* l = createEl("Test String (1).", 30, &printString);
-    printf("%s\n%p\n", (char*) l->data, l->next);
+
     //Test create and traverse
-    printf("Test traverse one item\n");
+    printf("Test create and traverse one node:\n");
+    listElement* l = createEl("Test String (1).", 30, &printString);
+    printf("Newly created node:    My Address=%11p, Next Address=%11p, Data='%s'\n", l, l->next, (char*) l->data);
     traverse(l);
     printf("\n");
 
-    //Test insert after
-    listElement* l2 = insertAfter(l, "another string (2)", 30, &printString);
-    listElement* l3 = insertAfter(l2, "a final string (3)", 30, &printString);
-    printf("Test traverse 3 items\n");
+    //Test insert after with a char data and int data
+    printf("Test create and traverse items of various types:\n");
+    char a = 'a';
+    int answer = 42;
+    double pi = M_PI;
+    listElement* elem2 = insertAfter(l, &a, sizeof(char), &printChar);
+    listElement* elem3 = insertAfter(elem2, &answer, sizeof(int), &printInt);
+    listElement* elem4 = insertAfter(elem3, &pi, sizeof(double), &printDouble);
+    printf("Original node #0:      My Address=%11p, Next Address=%11p, Data='%s'\n", l, l->next, (char*) l->data);
+    printf("Newly created node #1: My Address=%11p, Next Address=%11p, Data='%c'\n", elem2, elem2->next, *((char*) elem2->data));
+    printf("Newly created node #2: My Address=%11p, Next Address=%11p, Data='%d'\n", elem3, elem3->next, *((int*) elem3->data));
+    printf("Newly created node #3: My Address=%11p, Next Address=%11p, Data='%lf'\n", elem4, elem4->next, *((double*) elem4->data));
     traverse(l);
     printf("\n");
 
     // Test delete after
     printf("Test deleting item #2\n");
-    deleteAfter(l); // NOTE: l2 is now invalid memory
+    deleteAfter(l); // NOTE: elem2 is now invalid memory
     traverse(l);
     printf("\n");
 
     // Test length
-    printf("Test length of list=%d\n", length(l));
-    printf("Test length of partial list=%d\n", length(l3));
-    printf("Test length of empty list=%d\n", length(NULL));
+    printf("Test lengths: Full list=%d, from the middle of a list=%d, of NULL=%d\n", length(l), length(elem3), length(NULL));
     printf("\n");
 
     //Test pushing to the head of the list
-    printf("Test push\n");
-    push(&l, "an initial string (0)", 30, &printString);
+    printf("Test push an int\n");
+    int number = -128;
+    push(&l, &number, sizeof(int), &printInt);
     traverse(l);
-    printf("Test length of list=%d\n", length(l));
+    printf("Length of list=%d\n", length(l));
     printf("\n");
 
     //Test popping
     printf("Test pop:\n");
     listElement* node = pop(&l);
+    printf("Popped data='%d'\n", *((int*) node->data));
+    freeListElement(node);
     traverse(l);
-    printf("Test length of list=%d\n", length(l));
-    printf("Popped data='%s'\n", (char*) node->data);
+    printf("Length of list=%d\n", length(l));
     printf("\n");
 
     //Test enqueuing
-    printf("Test enqueue\n");
+    printf("Test enqueue two strings:\n");
     push(&l, "a new initial string (-1)", 30, &printString);
-    push(&l, "an even more initial string (-2)", 30, &printString);
+    push(&l, "an even more initial string (-2)", 40, &printString);
     traverse(l);
-    printf("Test length of list=%d\n", length(l));
     printf("\n");
 
     //Test dequeue
     printf("Test dequeue\n");
     node = dequeue(&l);
+    printf("Dequeued data='%lf'\n", *((double*) node->data));
+    freeListElement(node);
     traverse(l);
-    printf("Test length of list=%d\n", length(l));
-    printf("Dequeued data='%s'\n", (char*) node->data);
-    printf("Dequeue all items\n");
-    node = dequeue(&l);
-    node = dequeue(&l);
-    node = dequeue(&l);
-    traverse(l);
-    printf("Test length of list=%d\n", length(l));
-    printf("Dequeued data='%s'\n", (char*) node->data);
-    printf("Dequeue an empty list\n");
-    node = dequeue(&l);
-    printf("Is the dequeued node null? %s\n", (node == NULL) ? "NULL" : "SOMETHING");
-    printf("Is the list head pointer null? %s\n", (l == NULL) ? "NULL" : "SOMETHING");
     printf("\n");
+
+// an even more initial string (-2) -> a new initial string (-1) -> Test String (1). -> 42 -> 3.141593 -> EOL
+    printf("Empty the list, then traverse it:\n");
+    node = dequeue(&l);
+    freeListElement(node);
+    node = dequeue(&l);
+    freeListElement(node);
+    node = dequeue(&l);
+    freeListElement(node);
+    node = dequeue(&l);
+    freeListElement(node);
+    traverse(l);
+    printf("Length of empty list=%d\n", length(l));
+    printf("Attempt to dequeue an empty list, should not make an error: ");
+    node = dequeue(&l);
+    printf("Is the dequeued node null? %s, ", (node == NULL) ? "NULL" : "SOMETHING");
+    printf("Is the list head pointer null? %s\n", (l == NULL) ? "NULL" : "SOMETHING");
+    printf("Attempt to pop an empty list, should not make an error: ");
+    node = pop(&l);
+    printf("Is the popped node null? %s, ", (node == NULL) ? "NULL" : "SOMETHING");
+    printf("Is the list head pointer null? %s\n", (l == NULL) ? "NULL" : "SOMETHING");
 
     printf("\nTests complete.\n");
 }

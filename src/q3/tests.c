@@ -5,7 +5,7 @@ void runTests(){
   printf("Tests running...\n");
   printf("Test create\n");
   listElement* l = createEl("Test String (1).", 30);
-  printf("%s\n%p\n", l->data, l->next);
+  printf("%s\n%p\n", (char*) l->data, l->next);
   //Test create and traverse
   printf("Test traverse one item\n");
   traverse(l);
@@ -42,7 +42,7 @@ void runTests(){
   listElement* node = pop(&l);
   traverse(l);
   printf("Test length of list=%d\n", length(l));
-  printf("Popped data='%s'\n", node->data);
+  printf("Popped data='%s'\n", (char*) node->data);
   printf("\n");
 
   //Test enqueuing
@@ -58,14 +58,14 @@ void runTests(){
   node = dequeue(&l);
   traverse(l);
   printf("Test length of list=%d\n", length(l));
-  printf("Dequeued data='%s'\n", node->data);
+  printf("Dequeued data='%s'\n", (char*) node->data);
   printf("Dequeue all items\n");
   node = dequeue(&l);
   node = dequeue(&l);
   node = dequeue(&l);
   traverse(l);
   printf("Test length of list=%d\n", length(l));
-  printf("Dequeued data='%s'\n", node->data);
+  printf("Dequeued data='%s'\n", (char*) node->data);
   printf("Dequeue an empty list\n");
   node = dequeue(&l);
   printf("Is the dequeued node null? %s\n", (node == NULL) ? "NULL" : "SOMETHING");

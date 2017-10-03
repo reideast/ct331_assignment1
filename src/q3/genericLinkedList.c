@@ -5,37 +5,43 @@
 
 //Creates a new linked list element with given content of size
 //Returns a pointer to the element
-listElement* createEl(char* data, size_t size){
-  listElement* e = malloc(sizeof(listElement));
-  if(e == NULL){
-    //malloc has had an error
-    return NULL; //return NULL to indicate an error.
-  }
-  char* dataPointer = malloc(sizeof(char)*size);
-  if(dataPointer == NULL){
-    //malloc has had an error
-    free(e); //release the previously allocated memory
-    return NULL; //return NULL to indicate an error.
-  }
-  strcpy(dataPointer, data);
-  e->data = dataPointer;
-  e->size = size;
-  e->next = NULL;
-  return e;
+listElement* createEl(void* data, size_t size) {
+    // Create node
+    listElement* e = malloc(sizeof(listElement));
+    if (e == NULL) { //malloc has had an error
+        return NULL; //return NULL to indicate an error.
+    }
+
+    // Create space to hold the data
+    char* dataPointer = malloc(size);
+    if (dataPointer == NULL){ //malloc has had an error
+        free(e); //release the previously allocated memory
+        return NULL; //return NULL to indicate an error.
+    }
+
+    // Copy the data into the new memory space
+    memcpy(dataPointer, data, size);
+
+    // store the information in the new node
+    e->data = dataPointer;
+    e->size = size;
+    e->next = NULL;
+    return e;
 }
 
 //Prints out each element in the list
 void traverse(listElement* start){
   listElement* current = start;
   while(current != NULL){
-    printf("%s\n", current->data);
+//    printf("%s\n", current->data);
+    printf("DEBUG: Hey, it's a list element!\n");
     current = current->next;
   }
 }
 
 //Inserts a new element after the given el
 //Returns the pointer to the new element
-listElement* insertAfter(listElement* el, char* data, size_t size){
+listElement* insertAfter(listElement* el, void* data, size_t size){
   listElement* newEl = createEl(data, size);
   listElement* next = el->next;
   newEl->next = next;
@@ -64,7 +70,7 @@ int length(listElement* list) {
 }
 
 //Push a new element onto the head of a list
-void push(listElement** list, char* data, size_t size) {
+void push(listElement** list, void* data, size_t size) {
     // NOTE: list is a pointer to a pointer, so:
     //       **list is the actual node (head of list)
     //       *list is a memory address (the pointer to that head of list) and modifying this changes what the calling function believes is the node acting as the list's head
@@ -95,7 +101,7 @@ listElement* pop(listElement** list) {
 }
 
 //Enqueue a new element onto the head of the list
-void enqueue(listElement** list, char* data, size_t size) {
+void enqueue(listElement** list, void* data, size_t size) {
     push(list, data, size);
 }
 

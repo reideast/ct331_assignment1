@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "genericLinkedList.h"
 #include <math.h>
+#include <stdlib.h>
 
 // Define item printers
 void printString(void* data) {
@@ -102,7 +103,6 @@ void runTests(){
     traverse(l);
     printf("\n");
 
-// an even more initial string (-2) -> a new initial string (-1) -> Test String (1). -> 42 -> 3.141593 -> EOL
     printf("Empty the list, then traverse it:\n");
     node = dequeue(&l);
     freeListElement(node);
@@ -122,6 +122,33 @@ void runTests(){
     node = pop(&l);
     printf("Is the popped node null? %s, ", (node == NULL) ? "NULL" : "SOMETHING");
     printf("Is the list head pointer null? %s\n", (l == NULL) ? "NULL" : "SOMETHING");
+    printf("\n");
+
+    printf("Testing array struct, which is passable as (void*):\n");
+    // Create array struct
+    structuredArray* arr = malloc(sizeof(structuredArray));
+    arr->length = 4;
+    arr->printDataFunction = &printIntArrayItem;
+    arr->array = malloc(arr->length * sizeof(void));
+    int first = 4, second = 3, third = 2, fourth = 1;
+//    *(((int**) arr->array) + 0) = (void*) &first;
+//    *(((int**) arr->array) + 1) = &second;
+//    *(((int**) arr->array) + 2) = &third;
+//    *(((int**) arr->array) + 3) = &fourth;
+    *(((int**) arr->array) + 0) = 8;
+    *(((int**) arr->array) + 1) = 9;
+    *(((int**) arr->array) + 2) = 10;
+    *(((int**) arr->array) + 3) = 11;
+    printf("%d\n", *((int*) (((int**) (arr->array)) + 3)));
+    // Create list with array struct in the middle
+    l = createEl("First", 10, &printString);
+    elem2 = insertAfter(l, &a, sizeof(char), &printChar);
+    elem3 = insertAfter(elem2, &answer, sizeof(int), &printInt);
+    elem4 = insertAfter(elem3, arr, sizeof(structuredArray), &printStructuredArray); // Shallow copy!
+    listElement* elem5 = insertAfter(elem4, &pi, sizeof(double), &printDouble);
+    // Print the whole list
+    traverse(l);
+    free(arr->array);
 
     printf("\nTests complete.\n");
 }

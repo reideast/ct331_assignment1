@@ -49,7 +49,7 @@ void runTests(){
   //Test enqueuing
   printf("Test enqueue\n");
   push(&l, "a new initial string (-1)", 30);
-  push(&l, "an even more initial string (-2)", 30);
+  push(&l, "an even more initial string (-2)", 40);
   traverse(l);
   printf("Test length of list=%d\n", length(l));
   printf("\n");

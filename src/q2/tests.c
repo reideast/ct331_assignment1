@@ -44,6 +44,7 @@ void runTests(){
   traverse(l);
   printf("Test length of list=%d\n", length(l));
   printf("Popped data='%s'\n", node->data);
+  freeListElement(node);
   printf("\n");
 
   //Test enqueuing
@@ -60,13 +61,17 @@ void runTests(){
   traverse(l);
   printf("Test length of list=%d\n", length(l));
   printf("Dequeued data='%s'\n", node->data);
+  freeListElement(node);
   printf("Dequeue all items\n");
   node = dequeue(&l);
+  freeListElement(node);
   node = dequeue(&l);
+  freeListElement(node);
   node = dequeue(&l);
   traverse(l);
   printf("Test length of list=%d\n", length(l));
   printf("Dequeued data='%s'\n", node->data);
+  freeListElement(node);
   printf("Dequeue an empty list\n");
   node = dequeue(&l);
   printf("Is the dequeued node null? %s\n", (node == NULL) ? "NULL" : "SOMETHING");

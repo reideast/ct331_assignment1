@@ -130,3 +130,9 @@ listElement* dequeue(listElement** list) {
     // Return the removed node
     return tail;
 }
+
+void freeListElement(listElement* delete) {
+    //need to free the memory because we used malloc
+    free(delete->data);
+    free(delete);
+}

@@ -17,37 +17,31 @@ void printDouble(void* data) {
     printf("%lf -> ", *((double*) data));
 }
 
-// Define an array that can be passed around as a (void*) and supports generics for its data elements. (But just printing, no real usefulness here...)
-typedef struct struct_structuredArray {
-    void** array;
+// Define an array that can be passed around as a (void*). (But just printing, no real usefulness here...)
+typedef struct struct_structuredIntArray {
+    int* array;
     int length;
-    void (*printDataFunction)(void* data);
-} structuredArray;
-void printStructuredArray(void* data) {
-    int len = ((structuredArray*) data)->length;
-    void** array = ((structuredArray*) data)->array;
+} structuredIntArray;
+void printStructuredIntArray(void* data) {
+    int len = ((structuredIntArray*) data)->length;
+    int* array = ((structuredIntArray*) data)->array;
     for (int i = 0; i < len; ++i) {
-        void* item = (array + i);
-        ((structuredArray*) data)->printDataFunction(item);
+        printf("%d", array[i]);
+        if (i != len - 1) {
+            printf(",");
+        }
     }
     printf(" -> ");
-}
-void printIntArrayItem(void* data) {
-    printf("%d, ", *((int*) data));
 }
 
 void runTests(){
     printf("Tests running...\n");
 
-    //Test create and traverse
-    printf("Test create and traverse one node:\n");
+    //Test insert with int, char, double, and string
+    printf("Test create and traverse items of various types:\n");
     listElement* l = createEl("Test String (1).", 30, &printString);
     printf("Newly created node:    My Address=%11p, Next Address=%11p, Data='%s'\n", l, l->next, (char*) l->data);
     traverse(l);
-    printf("\n");
-
-    //Test insert after with a char data and int data
-    printf("Test create and traverse items of various types:\n");
     char a = 'a';
     int answer = 42;
     double pi = M_PI;
@@ -77,7 +71,6 @@ void runTests(){
     push(&l, &number, sizeof(int), &printInt);
     traverse(l);
     printf("Length of list=%d\n", length(l));
-    printf("\n");
 
     //Test popping
     printf("Test pop:\n");
@@ -126,29 +119,34 @@ void runTests(){
 
     printf("Testing array struct, which is passable as (void*):\n");
     // Create array struct
-    structuredArray* arr = malloc(sizeof(structuredArray));
+    structuredIntArray* arr = malloc(sizeof(structuredIntArray));
     arr->length = 4;
-    arr->printDataFunction = &printIntArrayItem;
-    arr->array = malloc(arr->length * sizeof(void));
-    int first = 4, second = 3, third = 2, fourth = 1;
-//    *(((int**) arr->array) + 0) = (void*) &first;
-//    *(((int**) arr->array) + 1) = &second;
-//    *(((int**) arr->array) + 2) = &third;
-//    *(((int**) arr->array) + 3) = &fourth;
-    *(((int**) arr->array) + 0) = 8;
-    *(((int**) arr->array) + 1) = 9;
-    *(((int**) arr->array) + 2) = 10;
-    *(((int**) arr->array) + 3) = 11;
-    printf("%d\n", *((int*) (((int**) (arr->array)) + 3)));
+    arr->array = malloc(arr->length * sizeof(int));
+    *(arr->array + 0) = 8;
+    *(arr->array + 1) = 9;
+    *(arr->array + 2) = 10;
+    *(arr->array + 3) = 11;
     // Create list with array struct in the middle
     l = createEl("First", 10, &printString);
-    elem2 = insertAfter(l, &a, sizeof(char), &printChar);
-    elem3 = insertAfter(elem2, &answer, sizeof(int), &printInt);
-    elem4 = insertAfter(elem3, arr, sizeof(structuredArray), &printStructuredArray); // Shallow copy!
-    listElement* elem5 = insertAfter(elem4, &pi, sizeof(double), &printDouble);
+    insertAfter(l, &a, sizeof(char), &printChar);
+    enqueue(&l, &answer, sizeof(int), &printInt);
+    push(&l, arr, sizeof(structuredIntArray), &printStructuredIntArray); // Shallow copy!
+    free(arr); // free original struct now that it's been copied
+    push(&l, &pi, sizeof(double), &printDouble);
     // Print the whole list
     traverse(l);
-    free(arr->array);
+    // Empty the list
+    node = dequeue(&l); // char
+    freeListElement(node);
+    node = dequeue(&l); // string
+    freeListElement(node);
+    node = pop(&l); // double
+    freeListElement(node);
+    node = pop(&l); // structuredIntArray
+    free(((structuredIntArray*) (node->data))->array); // Have to free the data we malloc'd above (that wasn't included in the shallow copy)
+    freeListElement(node);
+    node = pop(&l); // int
+    freeListElement(node);
 
     printf("\nTests complete.\n");
 }
